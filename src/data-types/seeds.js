@@ -86,7 +86,12 @@ function getSeedItemById(id) {
   return ALL_SEEDS.find((seedItem) => seedItem.getId() === id);
 }
 
+function getRandomSeed() {
+  return ALL_SEEDS[Math.floor(Math.random() * ALL_SEEDS.length)];
+}
+
 module.exports = {
   ALL_SEEDS,
   getSeedItemById,
+  getRandomSeed,
 };
