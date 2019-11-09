@@ -1,11 +1,14 @@
 const InventoryItem = require('./inventory-item');
+const { state, saveState } = require('../state');
+const { getSeedItemById } = require('../data-types/seeds');
 
 /**
  * The player's inventory; what items they have.
  */
 class Inventory {
   constructor() {
-    this._items = [];
+    // Re-hydrate state from disk
+    this._deserialise(state.inventory);
   }
 
   _findItemEntry(item) {
@@ -34,6 +37,9 @@ class Inventory {
 
     // Amend amount
     itemEntry.amount++;
+
+    // Persist changes to disk
+    this._saveState();
   }
 
   remove(item) {
@@ -56,6 +62,9 @@ class Inventory {
     if (itemEntry.amount === 0) {
       this._items.splice(this._items.indexOf(itemEntry), 1);
     }
+
+    // Persist changes to disk
+    this._saveState();
   }
 
   getAtIndex(index) {
@@ -68,6 +77,44 @@ class Inventory {
 
   getAllItems() {
     return this._items;
+  }
+
+  /**
+   * Save the current state of the inventory to disk
+   */
+  _saveState() {
+    state.inventory = this._serialise();
+    saveState();
+  }
+
+  /**
+   * Convert the current inventory state into JSON format for storing on disk
+   */
+  _serialise() {
+    return {
+      // Map (id, amount) for each item entry
+      items: this._items.map((itemEntry) => {
+        return {
+          id: itemEntry.item.getId(),
+          amount: itemEntry.amount,
+        };
+      }),
+    };
+  }
+
+  /**
+   * Deserialise the inventory state from disk (JSON) into proper types
+   * @param {object} inventoryState Raw inventory state object from disk
+   */
+  _deserialise(inventoryState) {
+    const items = [];
+    inventoryState.items.forEach((item) => {
+      let newItemEntry = this._createNewItemEntry(getSeedItemById(item.id));
+      newItemEntry.amount = item.amount;
+      items.push(newItemEntry);
+    });
+
+    this._items = items;
   }
 }
 
