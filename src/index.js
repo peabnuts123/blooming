@@ -1,6 +1,6 @@
 const readline = require('readline');
 
-const commands = require('./commands');
+const { getCommandByAlias } = require('./commands');
 const terminal = require('./terminal');
 
 const rl = readline.createInterface({
@@ -12,28 +12,15 @@ const rl = readline.createInterface({
 rl.prompt();
 
 rl.on('line', (userInput) => {
-  let commandDefinition;
-  let commandFound = false;
+  let [command, ...args] = userInput.split(/\s+/g);
 
-  // Find command that matches input
-  for (let i = 0; i < commands.length; i++) {
-    commandDefinition = commands[i];
-
-    // If user input matches one of this commands aliases, execute it
-    if (commandDefinition.aliases.some((alias) => alias.toLocaleLowerCase() == userInput.toLocaleLowerCase())) {
-      // Execute command
-      commandDefinition.func();
-
-      // Stop processing
-      commandFound = true;
-      break;
-    }
-  }
-
-  // Log a warning if no commands matched
-  if (!commandFound) {
+  let commandDefinition = getCommandByAlias(command);
+  if (commandDefinition) {
+    commandDefinition.func(args);
+  } else {
     terminal.print("Command not recognised");
   }
 
+  terminal.print();
   rl.prompt();
 });
