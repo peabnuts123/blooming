@@ -1,6 +1,6 @@
 const readline = require('readline');
 
-const { getCommandByAlias } = require('./commands');
+const { getCommandByAlias, autoCompleteFunction } = require('./commands');
 const constants = require('./constants');
 const { getSeedItemById, getRandomSeed } = require('./data-types/seeds');
 const inventory = require('./inventory/inventory');
@@ -83,6 +83,7 @@ function giveLoginReward() {
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
+  completer: autoCompleteFunction,
   prompt: 'bloom> '
 });
 

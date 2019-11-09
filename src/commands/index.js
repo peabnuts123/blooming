@@ -65,7 +65,26 @@ function getCommandByAlias(alias) {
   });
 }
 
+/**
+ * Autocompletion function for tab autocomplete in the terminal.
+ * Fetch a list of possible aliases that start with what the user has typed.
+ * @param {string} line User input from terminal
+ */
+function autoCompleteFunction(line) {
+  let validAliases = [];
+  commands.forEach((commandDefinition) => {
+    commandDefinition.aliases.forEach((alias) => {
+      if (alias.toLocaleLowerCase().startsWith(line.toLocaleLowerCase())) {
+        validAliases.push(alias);
+      }
+    });
+  });
+
+  return [validAliases, line];
+}
+
 module.exports = {
   commands,
   getCommandByAlias,
+  autoCompleteFunction,
 }
