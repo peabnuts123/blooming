@@ -1,3 +1,4 @@
+const inventory = require('./inventory/inventory');
 const terminal = require('./terminal');
 
 /**
@@ -47,7 +48,6 @@ const commands = [
         commands.forEach((commandDefinition) => {
           let str = "    " + commandDefinition.usage.join(', ') + "    ";
           str = padString(str, leftColumnWidth);
-          // str += new Array((leftColumnWidth - str.length) + 1).join(' ');
           str += commandDefinition.description;
           terminal.print(str);
         });
@@ -66,9 +66,27 @@ const commands = [
     },
     func([index]) {
       if (index) {
-        terminal.print(`@TODO show summary of item in inventory slot index: ${index}`)
+        // Check if index is a numeric value
+        if (!isNaN(index) && isFinite(index)) {
+          // Check if index is within bounds
+          if (index < inventory.itemCount() && index >= 0) {
+            let inventoryItem = inventory.getAtIndex(index);
+            terminal.print(`${inventoryItem.getName()}: ${inventoryItem.getSummary()}`);
+          } else {
+            terminal.print(`Invalid index: ${index}. Inventory only has items 0-${inventory.itemCount() - 1}`);
+          }
+        } else {
+          terminal.print(`Invalid index: '${index}'. Please input a number e.g. inventory 2`);
+        }
       } else {
-        terminal.print(`@TODO show summary of whole inventory`);
+        let inventoryItems = inventory.getAllItems();
+        let leftColumnWidth = 50;
+        inventoryItems.forEach((inventoryItem, index) => {
+          let str = `[${index}] ${inventoryItem.item.getName()}`;
+          str = padString(str, leftColumnWidth);
+          str += `x${inventoryItem.amount}`;
+          terminal.print(str);
+        });
       }
     },
   },
