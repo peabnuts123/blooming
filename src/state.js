@@ -23,14 +23,13 @@ if (dataFileExists) {
   try {
     // Attempt to parse file contents as JSON
     state = JSON.parse(stateFileContents);
-    console.log("[DEBUG] Successfully LOADED state from disk");
   } catch (e) {
     terminal.print(`Error! Could not load application state (not valid JSON). Please check the file is not corrupted: ${dataFileFullPath}`);
   }
 } else {
   // State file does not exist, make a new one
   state = createNewState();
-  console.log('[DEBUG] Created NEW state');
+  // console.log('[DEBUG] Created NEW state');
   saveState();
 }
 
@@ -52,9 +51,20 @@ function getOSAppDataRoot() {
  */
 function createNewState() {
   return {
+    /** Version of this state, for migrating */
+    version: 1,
+    /** Player's inventory */
     inventory: {
       items: [],
     },
+    discovery: {
+      /** List of IDs of seeds that are well-known to the player */
+      seedIds: [],
+    },
+    /** Time of last login */
+    lastLoginTime: undefined,
+    /** Time of last login reward */
+    lastLoginRewardTime: undefined,
   };
 }
 
@@ -64,7 +74,7 @@ function createNewState() {
 function saveState() {
   const stateFileContents = JSON.stringify(state);
   fs.writeFileSync(dataFileFullPath, stateFileContents);
-  console.log('[DEBUG] Wrote state to disk');
+  // console.log('[DEBUG] Wrote state to disk');
 }
 
 module.exports = {

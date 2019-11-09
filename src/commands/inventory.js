@@ -21,6 +21,7 @@ module.exports = {
         if (index < inventory.itemCount() && index >= 0) {
           // Get summary for item at index `index`
           let inventoryItem = inventory.getAtIndex(index);
+
           terminal.print(`${inventoryItem.getName()}: ${inventoryItem.getSummary()}`);
         } else {
           terminal.print(`Invalid index: ${index}. Inventory only has items 0-${inventory.itemCount() - 1}`);
@@ -37,6 +38,7 @@ module.exports = {
         let str = `[${index}] ${inventoryItem.item.getName()}`;
         str = padString(str, leftColumnWidth);
         str += `x${inventoryItem.amount}`;
+        
         terminal.print(str);
       });
     }
