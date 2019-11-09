@@ -6,7 +6,15 @@ class Discovery {
   }
 
   isSeedDiscovered(seedId) {
-    this._discoveredSeedIds.includes(seedId);
+    return this._discoveredSeedIds.includes(seedId);
+  }
+
+  markSeedAsDiscovered(seedId) {
+    // Ensure we never add a double-up
+    if (!this.isSeedDiscovered(seedId)) {
+      this._discoveredSeedIds.push(seedId);
+      this._saveState();
+    }
   }
 
   _deserialise(discoveryState) {
@@ -14,10 +22,10 @@ class Discovery {
   }
 
   _saveState() {
-    state.discovery = this._serialise;
+    state.discovery = this._serialise();
     saveState();
   }
-  
+
   _serialise() {
     return {
       seedIds: this._discoveredSeedIds,

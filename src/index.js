@@ -8,13 +8,16 @@ const constants = require('./constants');
 // @TODO @DEBUG REMOVE
 const inventory = require('./inventory/inventory');
 // @TODO un-comment to populate state
-// const { getSeedItemById } = require('./data-types/seeds');
+const { getSeedItemById } = require('./data-types/seeds');
 // for (let i = 0; i < 5; i++) {
 //   inventory.add(getSeedItemById('daffodil'));
 // }
 // for (let i = 0; i < 3; i++) {
 //   inventory.add(getSeedItemById('poppy'));
 // }
+// const discovery = require('./discovery');
+// discovery.markSeedAsDiscovered(getSeedItemById('daffodil').getId());
+
 
 // Last login
 const currentTime = new Date();
