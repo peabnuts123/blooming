@@ -1,19 +1,25 @@
 const { state, saveState } = require('../state.js');
-const { getPlantInfoById } = require('../data-types/seeds');
-const constants = require('../constants');
+const GardenItem = require('./garden-item');
+const PlantInfo = require('../data-types/plant-info'); // eslint-disable-line no-unused-vars
 
 /**
  * The garden itself. It contains things that are growing.
  */
 class Garden {
   constructor() {
+    /** @type {number} */
+    this._size = 0;
+    /** @type {GardenItem[]} */
+    this._plants = []
     this._deserialise(state.garden);
   }
 
-  _createNewPlantEntry(plant) {
-    return new GardenItem(plant);
-  }
-
+  /**
+   * @private
+   * Find the first garden slot that is empty.
+   * If no slots are empty, `undefined` is returned
+   * @returns {number|undefined}
+   */
   _getFirstEmptySlotIndex() {
     for (let i = 0; i < this._size; i++) {
       if (this._plants[i] === undefined) {
@@ -24,34 +30,68 @@ class Garden {
     return undefined;
   }
 
+  /**
+   * Plant a new seed in the garden
+   * @param {PlantInfo} seedInfo Plant info for seed to be planted
+   */
   plantSeed(seedInfo) {
-    if (this.getNumPlantsGrowing() >= this._size) {
+    if (this.getNumPlantsGrowing() >= this.getSize()) {
       throw new Error("Can't plant new plant - garden is full");
     }
 
-    let newPlantEntry = this._createNewPlantEntry(seedInfo);
+    let newGardenItem = new GardenItem(seedInfo);
     let slotIndex = this._getFirstEmptySlotIndex();
-    this._plants[slotIndex] = newPlantEntry;
+    this._plants[slotIndex] = newGardenItem;
     this._saveState();
     return slotIndex;
   }
 
+  /**
+   * Get the number of plants actively growing in the garden
+   * @returns {number}
+   */
   getNumPlantsGrowing() {
-    return this._plants.length;
+    let numPlantsGrowing = 0;
+    for (let i = 0; i < this.getSize(); i++) {
+      if (!this.isSlotEmpty(i)) {
+        numPlantsGrowing++;
+      }
+    }
+    return numPlantsGrowing;
   }
 
+  /**
+   * Get the garden item growing in a particular slot.
+   * If no item is growing in the slot, `undefined` will be returned
+   * @param {number} slotIndex Index to get the plant from
+   * @returns {GardenItem|undefined}
+   */
   getPlantInSlotIndex(slotIndex) {
     return this._plants[slotIndex];
   }
 
+  /**
+   * Whether the specified slot is empty i.e. there is no plant currently growing in it
+   * @param {number} slotIndex Garden slot index to check
+   * @returns {boolean}
+   */
   isSlotEmpty(slotIndex) {
     return this.getPlantInSlotIndex(slotIndex) === undefined;
   }
 
+  /**
+   * Get the current size of the garden, regardless of how many things are growing.
+   * @returns {number}
+   */
   getSize() {
     return this._size;
   }
 
+  /**
+   * Get all slots in the garden, regardless of whether there is something growing in
+   * them or not. Slots that have nothing growing will be `undefined`
+   * @returns {(GardenItem|undefined)[]}
+   */
   getAllSlots() {
     const numSlots = this.getSize();
     let allSlots = [];
@@ -61,15 +101,23 @@ class Garden {
     return allSlots;
   }
 
+  /**
+   * Get all growing plants in the garden. This is equivalent to getting all slots
+   * and then filtering-out empty ones.
+   * @returns {GardenItem[]}
+   */
   getAllPlants() {
     return this.getAllSlots().filter((slot) => slot !== undefined);
   }
 
+  /**
+   * Recalculate and save the stage of all growing plants, if needed
+   */
   updatePlantMaturities() {
     let didUpdate = false;
-    this.getAllPlants().forEach((gardenEntry) => {
-      const entryUpdated = gardenEntry.updateMaturityStage();
-      if (entryUpdated) {
+    this.getAllPlants().forEach((gardenItem) => {
+      const itemUpdated = gardenItem.updateMaturityStage();
+      if (itemUpdated) {
         didUpdate = true;
       }
     });
@@ -79,45 +127,29 @@ class Garden {
     }
   }
 
-  _deserialise(gardenState) {
-    this._size = gardenState.size;
-    this._plants = []
-    gardenState.plants.forEach((plantStateItem) => {
-      /* 
-        plantStateItem: {
-          id: 'daffodil',
-          // @TODO better than this?
-          stage: 2,
-          lastMaturityTime: '2019-11-09T20:01:03.292Z',
-        }
-       */
-      // Create plant entry from plant ID
-      let newPlantEntry = this._createNewPlantEntry(getPlantInfoById(plantStateItem.id));
-      newPlantEntry.stage = plantStateItem.stage;
-      newPlantEntry.lastMaturityTime = new Date(plantStateItem.lastMaturityTime);
-
-      // Store entry in correct slot index
-      this._plants[plantStateItem.slotIndex] = newPlantEntry;
-    });
-  }
-
+  /**
+   * @private
+   * Save the current state of the garden to disk
+   */
   _saveState() {
     state.garden = this._serialise();
     saveState();
   }
 
+  /**
+   * @private
+   * Convert the current garden state into a JSON object for storing on disk
+   * @returns {object}
+   */
   _serialise() {
     return {
       size: this._size,
-      plants: this._plants.map((plantEntry, slotIndex) => {
+      plants: this._plants.map((gardenItem, slotIndex) => {
         // Plant slots may be empty
-        if (plantEntry) {
-          return {
-            id: plantEntry.plant.getId(),
-            slotIndex,
-            stage: plantEntry.stage,
-            lastMaturityTime: plantEntry.lastMaturityTime.toISOString(),
-          };
+        if (gardenItem) {
+          let rawGardenItem = gardenItem.serialise();
+          rawGardenItem.slotIndex = slotIndex;
+          return rawGardenItem;
         } else {
           return undefined;
         }
@@ -125,55 +157,22 @@ class Garden {
       }).filter((item) => item !== undefined),
     };
   }
-}
-
-// @TODO rename? GardenEntry? PlantEntry? PlantInfo?
-class GardenItem {
-  constructor(plantInfo) {
-    this.plant = plantInfo;
-    this.stage = 0;
-    this.lastMaturityTime = new Date();
-  }
-
-  getName() {
-    return this.plant.getPlantName();
-  }
-
-  getStageSummary() {
-    return this.plant.getStageDescription(this.stage);
-  }
-
-  updateMaturityStage() {
-    let secondsSinceLastMaturity = (new Date() - this.lastMaturityTime) / 1000;
-    // @TODO move into seed data
-    const debug_SECONDS_PER_STAGE = 10;
-    let stagesToMature = Math.floor(secondsSinceLastMaturity / debug_SECONDS_PER_STAGE);
-
-    let didMature = stagesToMature > 0;
-    for (let i = 0; i < stagesToMature; i++) {
-      this.stage++;
-
-      if (this.stage === constants.NUM_PLANT_STAGES) {
-        // Stop iterating if plant has reached max stages
-        break;
-      }
-    }
-
-    if (didMature) {
-      this.lastMaturityTime = new Date();
-    }
-
-    // Signal whether the plant updated
-    return didMature;
-  }
 
   /**
-   * Whether this plant has gone to seed i.e. it has reached the max stage
+   * @private
+   * Deserialise the garden state from disk (JSON) into proper types
+   * @param {object} gardenState Raw garden state object from disk
    */
-  hasGoneToSeed() {
-    return this.stage >= constants.NUM_PLANT_STAGES;
+  _deserialise(gardenState) {
+    this._size = gardenState.size;
+    this._plants = [];
+    gardenState.plants.forEach((rawGardenItem) => {
+      // Create plant item from plant ID
+      let newGardenItem = GardenItem.deserialise(rawGardenItem);
+      // Store item in correct slot index
+      this._plants[rawGardenItem.slotIndex] = newGardenItem;
+    });
   }
 }
-
 
 module.exports = new Garden();

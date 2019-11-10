@@ -22,7 +22,7 @@ module.exports = {
           // Get summary for item at index `index`
           let inventoryItem = inventory.getAtIndex(index);
 
-          terminal.print(`${inventoryItem.getSeedName()}: ${inventoryItem.getSeedSummary()}`);
+          terminal.print(`${inventoryItem.getName()}: ${inventoryItem.getSummary()}`);
         } else {
           terminal.print(`Invalid index: ${index}. Inventory only has items 0-${inventory.itemCount() - 1}`);
         }
@@ -32,13 +32,13 @@ module.exports = {
     } else {
       // Display summary for all items in inventory
       let inventoryItems = inventory.getAllItems();
-      let leftColumnWidth = findMax(inventoryItems, (inventoryItem) => inventoryItem.item.getSeedName().length) + 7;
+      let leftColumnWidth = findMax(inventoryItems, (inventoryItem) => inventoryItem.getName().length) + 7;
       inventoryItems.forEach((inventoryItem, index) => {
         // Display index, item name, and amount of each item
-        let str = `[${index}] ${inventoryItem.item.getSeedName()}`;
+        let str = `[${index}] ${inventoryItem.getName()}`;
         str = padString(str, leftColumnWidth);
         str += `x${inventoryItem.amount}`;
-        
+
         terminal.print(str);
       });
     }

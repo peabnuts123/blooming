@@ -1,8 +1,8 @@
 /**
  * Find some kind of maximum of an array based on an evaluation function
- * 
- * @param {any[]} array Array to iterate over
- * @param {(item: any) => number} func Evaluation function for finding the value of each item for comparison
+ * @template T
+ * @param {T[]} array Array to iterate over
+ * @param {(item: T) => number} func Evaluation function for finding the value of each item for comparison
  */
 function findMax(array, func) {
   let max = -Infinity;

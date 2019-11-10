@@ -5,13 +5,14 @@ const constants = require('./constants');
 const { getPlantInfoById, getRandomSeed } = require('./data-types/seeds');
 const garden = require('./garden/garden');
 const inventory = require('./inventory/inventory');
+const SeedItem = require('./inventory/seed-item');
 const { state, saveState } = require('./state');
 const terminal = require('./terminal');
 const findMax = require('./util/findMax');
 const padString = require('./util/padString');
 
 // @TODO @DEBUG REMOVE TEST DATA
-// Mark daffodil is discovered  
+// Mark daffodil is discovered
 const discovery = require('./discovery');
 discovery.markSeedAsDiscovered(getPlantInfoById('daffodil').getId());
 // Add plant to slot 2
@@ -59,7 +60,7 @@ function giveLoginReward() {
   for (let i = 0; i < numRewardSeeds; i++) {
     let newSeed = getRandomSeed();
     // Add random seed to inventory
-    inventory.add(newSeed);
+    inventory.add(newSeed, SeedItem);
 
     // Ensure rewardSeeds object has this seed type in it
     if (!(newSeed.getId() in rewardSeeds)) {

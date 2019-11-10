@@ -10,7 +10,7 @@ The game is a CLI installable through npm. The input is through prompts like a t
  * ~~Receive seeds for logging in (max once per X minutes)~~
  * ~~List inventory~~
  * ~~Inspect items in your inventory~~
- * Show garden
+ * ~~Show garden~~
  * Inspect plant in garden
  * Plant seed from inventory into garden
  * Harvest / Collect from garden
