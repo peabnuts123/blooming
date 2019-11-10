@@ -2,16 +2,23 @@ const readline = require('readline');
 
 const { getCommandByAlias, autoCompleteFunction } = require('./commands');
 const constants = require('./constants');
-const { getSeedItemById, getRandomSeed } = require('./data-types/seeds');
+const { getPlantInfoById, getRandomSeed } = require('./data-types/seeds');
+const garden = require('./garden/garden');
 const inventory = require('./inventory/inventory');
 const { state, saveState } = require('./state');
 const terminal = require('./terminal');
 const findMax = require('./util/findMax');
 const padString = require('./util/padString');
 
-// Mark daffodil is discovered  @TODO @DEBUG REMOVE
+// @TODO @DEBUG REMOVE TEST DATA
+// Mark daffodil is discovered  
 const discovery = require('./discovery');
-discovery.markSeedAsDiscovered(getSeedItemById('daffodil').getId());
+discovery.markSeedAsDiscovered(getPlantInfoById('daffodil').getId());
+// Add plant to slot 2
+if (garden.isSlotEmpty(0)) {
+  console.log('[DEBUG] planting debug plant for testing');
+  garden.plantSeed(getPlantInfoById('daffodil'));
+}
 
 
 // LAST LOGIN
@@ -71,9 +78,9 @@ function giveLoginReward() {
   // Print out seeds awarded
   terminal.print("It's been a while since you were last here! You've been awarded new seeds.")
   terminal.print("You got:")
-  let leftColumnWidth = findMax(rewardSeeds, (rewardSeedEntry) => rewardSeedEntry.seed.getName().length) + 10;
+  let leftColumnWidth = findMax(rewardSeeds, (rewardSeedEntry) => rewardSeedEntry.seed.getSeedName().length) + 10;
   rewardSeeds.forEach((rewardSeedEntry) => {
-    terminal.print(`    ${padString(rewardSeedEntry.seed.getName(), leftColumnWidth)}x${rewardSeedEntry.amount}`)
+    terminal.print(`    ${padString(rewardSeedEntry.seed.getSeedName(), leftColumnWidth)}x${rewardSeedEntry.amount}`)
   });
   terminal.print();
 }

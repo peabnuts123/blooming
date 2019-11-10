@@ -1,4 +1,4 @@
-const SeedItem = require('../inventory/seed-item');
+const PlantInfo = require('./plant-info');
 
 /**
  * Base seed object. All seed objects will inherit these values by default
@@ -75,14 +75,14 @@ const ALL_SEEDS = seeds.map((seedDefinition) => {
   });
 
   // Construct class object from compiled blueprint
-  return new SeedItem(compiledDefinition);
+  return new PlantInfo(compiledDefinition);
 });
 
 /**
  * Look up a seed data item by ID
  * @param {string} id ID of seed data item
  */
-function getSeedItemById(id) {
+function getPlantInfoById(id) {
   return ALL_SEEDS.find((seedItem) => seedItem.getId() === id);
 }
 
@@ -92,6 +92,6 @@ function getRandomSeed() {
 
 module.exports = {
   ALL_SEEDS,
-  getSeedItemById,
+  getPlantInfoById,
   getRandomSeed,
 };

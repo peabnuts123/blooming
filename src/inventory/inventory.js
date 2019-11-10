@@ -1,9 +1,9 @@
-const InventoryItem = require('./inventory-item');
 const { state, saveState } = require('../state');
-const { getSeedItemById } = require('../data-types/seeds');
+const { getPlantInfoById } = require('../data-types/seeds');
 
 /**
  * The player's inventory; what items they have.
+ * @TODO move this file
  */
 class Inventory {
   constructor() {
@@ -23,11 +23,6 @@ class Inventory {
   }
 
   add(item) {
-    // Validate parameter type
-    if (!(item instanceof InventoryItem)) {
-      throw new Error("Cannot add non-inventory-item object to inventory: ");
-    }
-
     // Ensure item entry is present in inventory
     let itemEntry = this._findItemEntry(item);
     if (itemEntry === undefined) {
@@ -43,11 +38,6 @@ class Inventory {
   }
 
   remove(item) {
-    // Validate parameter type
-    if (!(item instanceof InventoryItem)) {
-      throw new Error("Cannot remove non-inventory-item object from inventory");
-    }
-
     // Look up inventory entry
     const itemEntry = this._findItemEntry(item);
     // Validate there is an inventory entry to update
@@ -107,14 +97,11 @@ class Inventory {
    * @param {object} inventoryState Raw inventory state object from disk
    */
   _deserialise(inventoryState) {
-    const items = [];
-    inventoryState.items.forEach((item) => {
-      let newItemEntry = this._createNewItemEntry(getSeedItemById(item.id));
-      newItemEntry.amount = item.amount;
-      items.push(newItemEntry);
+    this._items = inventoryState.items.map((inventoryStateItem) => {
+      let newItemEntry = this._createNewItemEntry(getPlantInfoById(inventoryStateItem.id));
+      newItemEntry.amount = inventoryStateItem.amount;
+      return newItemEntry;
     });
-
-    this._items = items;
   }
 }
 

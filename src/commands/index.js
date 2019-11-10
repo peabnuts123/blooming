@@ -5,6 +5,7 @@ const findMax = require('../util/findMax');
 // Commands
 const exitCommand = require('./exit');
 const inventoryCommand = require('./inventory');
+const gardenCommand = require('./garden');
 
 /**
  * All commands available from the CLI
@@ -51,6 +52,7 @@ const commands = [
   },
   inventoryCommand,
   exitCommand,
+  gardenCommand,
 ];
 
 /**

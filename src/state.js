@@ -47,7 +47,7 @@ function getOSAppDataRoot() {
 }
 
 /**
- * Create a new state object will all the properties are needed for the application to run properly
+ * Create a new state object with all the properties are needed for the application to run properly
  */
 function createNewState() {
   return {
@@ -56,6 +56,11 @@ function createNewState() {
     /** Player's inventory */
     inventory: {
       items: [],
+    },
+    /** The garden */
+    garden: {
+      size: 5,
+      plants: [],
     },
     discovery: {
       /** List of IDs of seeds that are well-known to the player */
