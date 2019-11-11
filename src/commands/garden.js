@@ -6,6 +6,7 @@ module.exports = {
   description: "",
   usage: ['garden'],
   help() {
+    terminal.print("@TODO help!");
   },
   func() {
     // Ensure garden plants are up to date

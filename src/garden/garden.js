@@ -33,6 +33,7 @@ class Garden {
   /**
    * Plant a new seed in the garden
    * @param {PlantInfo} seedInfo Plant info for seed to be planted
+   * @returns {number} Slot index the seed was planted into
    */
   plantSeed(seedInfo) {
     if (this.getNumPlantsGrowing() >= this.getSize()) {
@@ -58,6 +59,14 @@ class Garden {
       }
     }
     return numPlantsGrowing;
+  }
+
+  /**
+   * Gt the number of empty slots the garden has
+   * @returns {number}
+   */
+  getNumEmptySlots() {
+    return this.getSize() - this.getNumPlantsGrowing();
   }
 
   /**

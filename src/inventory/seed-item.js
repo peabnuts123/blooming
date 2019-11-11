@@ -18,6 +18,14 @@ class SeedItem extends InventoryItem {
   }
 
   /**
+   * Get the underlying PlantInfo of this inventory item
+   * @returns {PlantInfo}
+   */
+  getPlantInfo() {
+    return this._plantInfo;
+  }
+
+  /**
    * Name to display in the inventory
    * @returns {string}
    */

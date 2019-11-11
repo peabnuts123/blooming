@@ -2,6 +2,7 @@ const terminal = require('../terminal');
 const inventory = require('../inventory/inventory');
 const padString = require('../util/padString');
 const findMax = require('../util/findMax');
+const isNumeric = require('../util/isNumeric');
 
 module.exports = {
   aliases: ['inventory'],
@@ -16,7 +17,7 @@ module.exports = {
   func([index]) {
     if (index) {
       // Check if index is a numeric value
-      if (!isNaN(index) && isFinite(index)) {
+      if (isNumeric(index)) {
         // Check if index is within bounds
         if (index < inventory.itemCount() && index >= 0) {
           // Get summary for item at index `index`
