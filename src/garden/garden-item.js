@@ -45,7 +45,7 @@ class GardenItem {
     let stagesToMature = Math.floor(secondsSinceLastMaturity / debug_SECONDS_PER_STAGE);
 
     for (let i = 0; i < stagesToMature; i++) {
-      if (this.stage === constants.NUM_PLANT_STAGES) {
+      if (this.stage >= constants.NUM_PLANT_STAGES) {
         // Stop iterating if plant has reached max stages
         break;
       }
@@ -68,6 +68,26 @@ class GardenItem {
    */
   hasGoneToSeed() {
     return this.stage >= constants.NUM_PLANT_STAGES;
+  }
+
+  /**
+   * Generate a harvest payload for this garden item, based on the current stage it is in.
+   * This will return a random number of seeds and flowers, based on the underlying PlantInfo's
+   * harvest definitions.
+   */
+  generateHarvestPayload() {
+    const harvestRanges = this.plant.getStageHarvestRanges(this.stage);
+    const numSeeds = Math.floor(Math.random() * (harvestRanges.seedMax - harvestRanges.seedMin + 1)) + harvestRanges.seedMin;
+    const numFlowers = Math.floor(Math.random() * (harvestRanges.flowerMax - harvestRanges.flowerMin + 1)) + harvestRanges.flowerMin;
+
+    return {
+      /** @type {number} */
+      numSeeds,
+      /** @type {number} */
+      numFlowers,
+      /** @type {PlantInfo} */
+      plantInfo: this.plant,
+    };
   }
 
   /**

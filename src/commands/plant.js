@@ -13,8 +13,11 @@ module.exports = {
     terminal.print("@TODO help!");
   },
   func([inventoryIndex]) {
+    // Ensure garden plants are up to date
+    garden.updatePlantMaturities();
+
     if (inventoryIndex === undefined) {
-      // Neither `inventoryIndex`, nor `gardenIndex` arguments are provided
+      // `inventoryIndex` index is not provided
       terminal.print('Cannot plant. Missing inventory index. See usage: help plant')
     } else if (!isNumeric(inventoryIndex)) {
       // Inventory index is not a number
@@ -27,7 +30,7 @@ module.exports = {
       terminal.print("Cannot plant. Garden is full");
     } else {
       // Arguments are present and valid (except the inventory index might not be referring to a seed)
-      const inventoryItem = inventory.getAtIndex(inventoryIndex);
+      const inventoryItem = inventory.getAtIndex(Number(inventoryIndex));
 
       if (!(inventoryItem instanceof SeedItem)) {
         terminal.print(`Cannot plant. Item at index ${inventoryIndex} is not a seed: ${inventoryItem.getName()}`);

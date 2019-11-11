@@ -7,6 +7,7 @@ const exitCommand = require('./exit');
 const inventoryCommand = require('./inventory');
 const gardenCommand = require('./garden');
 const plantCommand = require('./plant');
+const harvestCommand = require('./harvest');
 
 /**
  * All commands available from the CLI
@@ -55,6 +56,7 @@ const commands = [
   exitCommand,
   gardenCommand,
   plantCommand,
+  harvestCommand,
 ];
 
 /**

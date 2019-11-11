@@ -32,6 +32,7 @@ class Inventory {
    * Add a new or existing item to the inventory
    * @param {any} item Item to add to the inventory
    * @param {new () => InventoryItem} ItemType Constructor for inventory item type (e.g. `SeedItem`)
+   * @return {InventoryItem} Inventory item that was added
    */
   add(item, ItemType) {
     // Ensure item is present in inventory
@@ -46,6 +47,8 @@ class Inventory {
 
     // Persist changes to disk
     this._saveState();
+
+    return inventoryItem;
   }
 
   /**

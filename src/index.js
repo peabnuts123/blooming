@@ -3,7 +3,6 @@ const readline = require('readline');
 const { getCommandByAlias, autoCompleteFunction } = require('./commands');
 const constants = require('./constants');
 const { getPlantInfoById, getRandomSeed } = require('./data-types/seeds');
-const garden = require('./garden/garden');
 const inventory = require('./inventory/inventory');
 const SeedItem = require('./inventory/seed-item');
 const { state, saveState } = require('./state');
@@ -15,11 +14,6 @@ const padString = require('./util/padString');
 // Mark daffodil is discovered
 const discovery = require('./discovery');
 discovery.markSeedAsDiscovered(getPlantInfoById('daffodil').getId());
-// Add plant to slot 2
-if (garden.isSlotEmpty(0)) {
-  console.log('[DEBUG] planting debug plant for testing');
-  garden.plantSeed(getPlantInfoById('daffodil'));
-}
 
 
 // LAST LOGIN
@@ -77,7 +71,7 @@ function giveLoginReward() {
   rewardSeeds = Object.keys(rewardSeeds).map((seedId) => rewardSeeds[seedId]);
 
   // Print out seeds awarded
-  terminal.print("It's been a while since you were last here! You've been awarded new seeds.")
+  terminal.print("It's been a while since you were last here! You got some new seeds.")
   terminal.print("You got:")
   let leftColumnWidth = findMax(rewardSeeds, (rewardSeedEntry) => rewardSeedEntry.seed.getSeedName().length) + 10;
   rewardSeeds.forEach((rewardSeedEntry) => {

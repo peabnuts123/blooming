@@ -48,6 +48,23 @@ class Garden {
   }
 
   /**
+   * Remove a garden item from the garden
+   * @param {GardenItem} gardenItem Garden item instance to remove
+   */
+  removeGardenItem(gardenItem) {
+    for (let i = 0; i < this.getSize(); i++) {
+      if (this._plants[i] === gardenItem) {
+        // Erase instance from collection
+        this._plants[i] = undefined;
+        // We're done here
+        break;
+      }
+    }
+
+    this._saveState();
+  }
+
+  /**
    * Get the number of plants actively growing in the garden
    * @returns {number}
    */

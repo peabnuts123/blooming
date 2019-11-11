@@ -11,10 +11,11 @@ The game is a CLI installable through npm. The input is through prompts like a t
  * ~~List inventory~~
  * ~~Inspect items in your inventory~~
  * ~~Show garden~~
- * Inspect plant in garden
  * ~~Plant seed from inventory into garden~~
  * Discover a plant once it reaches maturity
- * Harvest / Collect from garden
+ * ~~Harvest / Collect from garden~~
+ * === MVP LINE 🏆 ===
+ * Inspect plant in garden
  * View orders
  * Receive new orders every X minutes
  * Fulfil order from inventory

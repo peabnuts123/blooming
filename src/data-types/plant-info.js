@@ -1,4 +1,5 @@
 const discovery = require('../discovery');
+const constants = require('../constants');
 
 /**
  * A seed that is in your inventory. It can be planted in the garden
@@ -26,6 +27,16 @@ class PlantInfo {
 
   getStageDescription(stageIndex) {
     return this._definition.stageDescriptions['stage' + stageIndex];
+  }
+
+  getStageHarvestRanges(stageIndex) {
+    if (stageIndex >= constants.PLANT_SEED_STAGE) {
+      return this._definition.harvest.seed;
+    } else if (stageIndex >= constants.PLANT_MATURITY_STAGE) {
+      return this._definition.harvest.flower;
+    } else {
+      return this._definition.harvest.plant;
+    }
   }
 
   getSeedSummary() {
