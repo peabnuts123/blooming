@@ -1,11 +1,12 @@
 const { state, saveState } = require('../state');
 const InventoryItem = require('./inventory-item'); // eslint-disable-line no-unused-vars
 const SeedItem = require('./seed-item');
+const FlowerItem = require('./flower-item');
 
 /**
  * Collection of all inventory item constructors
  */
-const ALL_CONSTRUCTORS = [SeedItem];
+const ALL_CONSTRUCTORS = [SeedItem, FlowerItem];
 
 /**
  * The player's inventory; what items they have.
@@ -24,8 +25,10 @@ class Inventory {
    * @param {any} item Non inventory-item object to search by
    * @returns {InventoryItem}
    */
-  _findInventoryItem(item) {
-    return this._items.find((inventoryItem) => inventoryItem.isItem(item));
+  _findInventoryItem(item, ItemType) {
+    return this._items.find((inventoryItem) => {
+      return (inventoryItem instanceof ItemType) && inventoryItem.isItem(item)
+    });
   }
 
   /**
@@ -36,7 +39,7 @@ class Inventory {
    */
   add(item, ItemType) {
     // Ensure item is present in inventory
-    let inventoryItem = this._findInventoryItem(item);
+    let inventoryItem = this._findInventoryItem(item, ItemType);
     if (inventoryItem === undefined) {
       inventoryItem = new ItemType(item);
       this._items.push(inventoryItem);
@@ -53,13 +56,13 @@ class Inventory {
 
   /**
    * Remove an existing item from the inventory
-   * @param {any} item Item to remove from the inventory
+   * @param {InventoryItem} item Item to remove from the inventory
    */
-  remove(item) {
+  remove(inventoryItem) {
     // Look up inventory item
-    const inventoryItem = this._findInventoryItem(item);
     // Validate there is an inventory item to update
-    if (inventoryItem === undefined) {
+    let inventoryItemIndex = this._items.indexOf(inventoryItem);
+    if (inventoryItem === undefined || inventoryItemIndex === -1) {
       throw new Error("Cannot remove item from inventory; it is not in the inventory");
     }
 
@@ -68,7 +71,7 @@ class Inventory {
 
     // If there are now none of this item, remove this item
     if (inventoryItem.amount === 0) {
-      this._items.splice(this._items.indexOf(inventoryItem), 1);
+      this._items.splice(inventoryItemIndex, 1);
     }
 
     // Persist changes to disk

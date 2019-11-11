@@ -25,20 +25,6 @@ class PlantInfo {
     }
   }
 
-  getStageDescription(stageIndex) {
-    return this._definition.stageDescriptions['stage' + stageIndex];
-  }
-
-  getStageHarvestRanges(stageIndex) {
-    if (stageIndex >= constants.PLANT_SEED_STAGE) {
-      return this._definition.harvest.seed;
-    } else if (stageIndex >= constants.PLANT_MATURITY_STAGE) {
-      return this._definition.harvest.flower;
-    } else {
-      return this._definition.harvest.plant;
-    }
-  }
-
   getSeedSummary() {
     return this._definition.seed.summary;
   }
@@ -48,6 +34,36 @@ class PlantInfo {
       return this._definition.plant.name;
     } else {
       return `Unidentified plant`
+    }
+  }
+
+  getStageDescription(stageIndex) {
+    return this._definition.stageDescriptions['stage' + stageIndex];
+  }
+
+  /**
+   * Get the display name of this plant as a flower
+   * @returns {string}
+   */
+  getFlowerName() {
+    return this._definition.flower.name;
+  }
+
+  /**
+   * Get the summary of this plant as a flower
+   * @returns {string}
+   */
+  getFlowerSummary() {
+    return this._definition.flower.summary;
+  }
+
+  getStageHarvestRanges(stageIndex) {
+    if (stageIndex >= constants.PLANT_SEED_STAGE) {
+      return this._definition.harvest.seed;
+    } else if (stageIndex >= constants.PLANT_MATURITY_STAGE) {
+      return this._definition.harvest.flower;
+    } else {
+      return this._definition.harvest.plant;
     }
   }
 }

@@ -39,9 +39,8 @@ module.exports = {
         terminal.print(`Cannot plant. Item at index ${inventoryIndex} is not a seed: ${inventoryItem.getName()}`);
       } else {
         // Alright now we're ready to plant!
-        let plantInfo = inventoryItem.getPlantInfo();
-        let plantedSlotIndex = garden.plantSeed(plantInfo);
-        inventory.remove(plantInfo);
+        let plantedSlotIndex = garden.plantSeed(inventoryItem.getPlantInfo());
+        inventory.remove(inventoryItem);
         terminal.print(`Successfully planted ${inventoryItem.getName()} into garden slot ${plantedSlotIndex}. Remaining stock: ${inventoryItem.amount}`);
       }
     }

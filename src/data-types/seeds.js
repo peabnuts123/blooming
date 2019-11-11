@@ -22,6 +22,8 @@ const base = {
   flower: {
     /** Display name of the flower item */
     name: "NOT IMPLEMENTED",
+    /** Display summary of the flower item */
+    summary: "NOT IMPLEMENTED",
   },
   /** Data for what drops when the plant is harvested from the garden */
   harvest: {
@@ -68,7 +70,8 @@ const seeds = [
       name: "Poppy",
     },
     flower: {
-      name: "Poppy flower",
+      name: "Flower (Poppy)",
+      summary: "A cup-shaped, brilliant red flower with a dark center.",
     },
     harvest: {
       flower: {
@@ -98,7 +101,8 @@ const seeds = [
       name: "Daffodil",
     },
     flower: {
-      name: "Daffodil flower"
+      name: "Flower (Daffodil)",
+      summary: "A bright yellow flower. A star of petals surround a steep teacup in the center.",
     },
     stageDescriptions: {
       stage1: "Small shoots have emerged with healthy looking leaves.",

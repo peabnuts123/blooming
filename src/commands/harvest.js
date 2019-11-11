@@ -41,9 +41,8 @@ module.exports = {
       for (let i = 0; i < harvestPayload.numSeeds; i++) {
         seedInventoryItem = inventory.add(harvestPayload.plantInfo, SeedItem);
       }
-      for (let i = 0; i < harvestPayload.numSeeds; i++) {
-        // @TODO flower item class yo
-        // inventory.add(harvestPayload.plantInfo, FlowerItem);
+      for (let i = 0; i < harvestPayload.numFlowers; i++) {
+        flowerInventoryItem = inventory.add(harvestPayload.plantInfo, FlowerItem);
       }
 
       // Remove the garden item from the garden
