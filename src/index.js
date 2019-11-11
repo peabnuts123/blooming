@@ -98,7 +98,7 @@ const rl = readline.createInterface({
 rl.prompt();
 
 rl.on('line', (userInput) => {
-  let [command, ...args] = userInput.split(/\s+/g);
+  let [command, ...args] = userInput.trim().split(/\s+/g);
 
   // Lookup command by alias
   let commandDefinition = getCommandByAlias(command);
