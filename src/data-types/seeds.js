@@ -117,16 +117,16 @@ const ALL_SEEDS = seeds.map((seedDefinition) => {
     seed: Object.assign({}, base.seed, seedDefinition.seed),
     plant: Object.assign({}, base.plant, seedDefinition.plant),
     flower: Object.assign({}, base.flower, seedDefinition.flower),
-    harvest: base.harvest,
+    harvest: Object.assign({}, base.harvest),
     stageDescriptions: Object.assign({}, base.stageDescriptions, seedDefinition.stageDescriptions),
   });
 
   // Merge harvest definitions if supplied
   if (seedDefinition.harvest) {
     // Merge each option individually
-    Object.assign(compiledDefinition.harvest.plant, seedDefinition.harvest.plant);
-    Object.assign(compiledDefinition.harvest.flower, seedDefinition.harvest.flower);
-    Object.assign(compiledDefinition.harvest.seed, seedDefinition.harvest.seed);
+    compiledDefinition.harvest.plant = Object.assign({}, compiledDefinition.harvest.plant, seedDefinition.harvest.plant);
+    compiledDefinition.harvest.flower = Object.assign({}, compiledDefinition.harvest.flower, seedDefinition.harvest.flower);
+    compiledDefinition.harvest.seed = Object.assign({}, compiledDefinition.harvest.seed, seedDefinition.harvest.seed);
   }
 
   // Construct class object from compiled blueprint
