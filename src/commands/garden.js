@@ -1,9 +1,10 @@
 const terminal = require('../terminal');
 const garden = require('../garden/garden');
+const announceNewlyDiscoveredPlants = require('../util/announceNewlyDiscoveredSeeds');
 
 module.exports = {
   aliases: ['garden'],
-  description: "",
+  description: "View what's currently growing in the garden",
   usage: ['garden'],
   help() {
     terminal.print("@TODO help!");
@@ -31,6 +32,10 @@ module.exports = {
 
       terminal.print(`[${index}] ${slotName}`);
       terminal.print(`\t${slotSummary}`);
+
     });
+
+    // Announce any newly identified plants
+    announceNewlyDiscoveredPlants("\nYou've identified new plants!");
   },
 };

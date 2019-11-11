@@ -22,6 +22,9 @@ module.exports = {
     } else if (!isNumeric(inventoryIndex)) {
       // Inventory index is not a number
       terminal.print('Cannot plant. Inventory index is not valid - it must be a number');
+    } else if (inventory.itemCount() === 0) {
+      // Inventory is empty
+      terminal.print(`Cannot plant. Inventory is empty`);
     } else if (Number(inventoryIndex) < 0 || Number(inventoryIndex) >= inventory.itemCount()) {
       // Inventory index is not in the right bounds
       terminal.print(`Cannot plant. Inventory index is not valid - it must be between 0 and ${inventory.itemCount() - 1}`);

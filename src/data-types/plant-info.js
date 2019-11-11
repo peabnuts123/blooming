@@ -9,7 +9,7 @@ class PlantInfo {
     this._definition = definition;
   }
 
-  _isDiscovered() {
+  isDiscovered() {
     return discovery.isSeedDiscovered(this.getId());
   }
 
@@ -18,7 +18,7 @@ class PlantInfo {
   }
 
   getSeedName() {
-    if (this._isDiscovered()) {
+    if (this.isDiscovered()) {
       return this._definition.seed.name;
     } else {
       return `Unidentified seed`
@@ -44,7 +44,7 @@ class PlantInfo {
   }
 
   getPlantName() {
-    if (this._isDiscovered()) {
+    if (this.isDiscovered()) {
       return this._definition.plant.name;
     } else {
       return `Unidentified plant`

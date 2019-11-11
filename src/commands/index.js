@@ -40,10 +40,12 @@ const commands = [
         }
       } else {
         // Print help for all commands
+        let sortedCommands = commands.slice().sort((commandA, commandB) => {
+          return commandA.usage.join(', ').localeCompare(commandB.usage.join(', '));
+        });
         terminal.print("Commands:")
-        let leftColumnWidth = findMax(commands, (commandDefinition) => commandDefinition.usage.join(', ').length) + 10;
-
-        commands.forEach((commandDefinition) => {
+        let leftColumnWidth = findMax(sortedCommands, (commandDefinition) => commandDefinition.usage.join(', ').length) + 10;
+        sortedCommands.forEach((commandDefinition) => {
           let str = "    " + commandDefinition.usage.join(', ');
           str = padString(str, leftColumnWidth);
           str += commandDefinition.description;

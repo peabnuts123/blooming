@@ -2,32 +2,35 @@ const readline = require('readline');
 
 const { getCommandByAlias, autoCompleteFunction } = require('./commands');
 const constants = require('./constants');
-const { getPlantInfoById, getRandomSeed } = require('./data-types/seeds');
+const { getRandomSeed } = require('./data-types/seeds');
+const garden = require('./garden/garden');
 const inventory = require('./inventory/inventory');
 const SeedItem = require('./inventory/seed-item');
 const { state, saveState } = require('./state');
 const terminal = require('./terminal');
 const findMax = require('./util/findMax');
 const padString = require('./util/padString');
+const announceNewlyDiscoveredPlants = require('./util/announceNewlyDiscoveredSeeds');
 
-// @TODO @DEBUG REMOVE TEST DATA
-// Mark daffodil is discovered
-const discovery = require('./discovery');
-discovery.markSeedAsDiscovered(getPlantInfoById('daffodil').getId());
 
+
+// Update plants in the garden
+garden.updatePlantMaturities();
 
 // LAST LOGIN
 const currentTime = new Date();
 const lastLoginTimeString = state.lastLoginTime;
 state.lastLoginTime = currentTime.toISOString();
+const hasPlayedBefore = !!lastLoginTimeString;
 saveState();
-if (lastLoginTimeString) {
+if (hasPlayedBefore) {
   const lastLoginTime = new Date(lastLoginTimeString);
   terminal.print(`Welcome back! Last login: ${lastLoginTime.toLocaleString()}`);
 } else {
-  terminal.print(`Welcome to bloom! @TODO better welcome message`)
+  terminal.print(`Welcome to bloom! Looks like your first time here. Try typing 'help' to see what commands there are. Have fun!`);
 }
 
+terminal.print();
 
 // LAST LOGIN REWARD
 const lastLoginRewardTimeString = state.lastLoginRewardTime;
@@ -40,6 +43,9 @@ if (lastLoginRewardTimeString) {
 } else {
   giveLoginReward();
 }
+
+// Announce plants that discovered while player was away
+announceNewlyDiscoveredPlants("You've identified new plants since you visited!");
 
 function giveLoginReward() {
   // Save current time as last reward time
@@ -71,11 +77,17 @@ function giveLoginReward() {
   rewardSeeds = Object.keys(rewardSeeds).map((seedId) => rewardSeeds[seedId]);
 
   // Print out seeds awarded
-  terminal.print("It's been a while since you were last here! You got some new seeds.")
-  terminal.print("You got:")
+  if (hasPlayedBefore) {
+    terminal.print("It's been a while since you were last here! You got some new seeds.");
+  } else {
+    terminal.print("Here are some seeds to start you off. They might not look like much yet, but plant them and see what grows!");
+  }
+
+  terminal.print("You got:");
+
   let leftColumnWidth = findMax(rewardSeeds, (rewardSeedEntry) => rewardSeedEntry.seed.getSeedName().length) + 10;
   rewardSeeds.forEach((rewardSeedEntry) => {
-    terminal.print(`    ${padString(rewardSeedEntry.seed.getSeedName(), leftColumnWidth)}x${rewardSeedEntry.amount}`)
+    terminal.print(`    ${padString(rewardSeedEntry.seed.getSeedName(), leftColumnWidth)}x${rewardSeedEntry.amount}`);
   });
   terminal.print();
 }

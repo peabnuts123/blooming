@@ -65,6 +65,8 @@ function createNewState() {
     discovery: {
       /** List of IDs of seeds that are well-known to the player */
       seedIds: [],
+      /** List of IDs of plants that have been discovered but have not yet been announced (subset of `seedIds`) */
+      newlyDiscoveredIds: [],
     },
     /** Time of last login */
     lastLoginTime: undefined,

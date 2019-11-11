@@ -1,6 +1,7 @@
 const constants = require('../constants');
 const { getPlantInfoById } = require('../data-types/seeds');
 const PlantInfo = require('../data-types/plant-info'); // eslint-disable-line no-unused-vars
+const discovery = require('../discovery');
 
 /**
  * A garden item i.e. a plant that is currently growing in the Garden
@@ -16,6 +17,14 @@ class GardenItem {
     this.stage = 0;
     /** @type {Date} */
     this.lastMaturityTime = new Date();
+  }
+
+  /**
+   * Get the plant ID of this garden item
+   * @returns {string}
+   */
+  getPlantId() {
+    return this.plant.getId();
   }
 
   /**
@@ -40,9 +49,7 @@ class GardenItem {
   updateMaturityStage() {
     const originalStage = this.stage;
     let secondsSinceLastMaturity = (new Date() - this.lastMaturityTime) / 1000;
-    // @TODO move into seed data
-    const debug_SECONDS_PER_STAGE = 10;
-    let stagesToMature = Math.floor(secondsSinceLastMaturity / debug_SECONDS_PER_STAGE);
+    let stagesToMature = Math.floor(secondsSinceLastMaturity / constants.GARDEN_PLANT_STAGE_DURATION_SECONDS);
 
     for (let i = 0; i < stagesToMature; i++) {
       if (this.stage >= constants.NUM_PLANT_STAGES) {
@@ -51,6 +58,10 @@ class GardenItem {
       }
 
       this.stage++;
+      // If plant has reached maturity, mark as discovered
+      if (this.stage == constants.PLANT_MATURITY_STAGE && !this.plant.isDiscovered()) {
+        discovery.markSeedAsDiscovered(this.plant.getId());
+      }
     }
     let didMature = this.stage > originalStage;
 

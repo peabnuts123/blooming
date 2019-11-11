@@ -4,11 +4,13 @@ const inventory = require('../inventory/inventory');
 const isNumeric = require('../util/isNumeric');
 const SeedItem = require('../inventory/seed-item');
 const FlowerItem = require('../inventory/flower-item');
+const announceNewlyDiscoveredPlants = require('../util/announceNewlyDiscoveredSeeds');
+
 
 module.exports = {
   aliases: ['harvest'],
   description: "Harvest a plant from the garden in its current state",
-  usage: ['harvest 2'],
+  usage: ['harvest [garden index]'],
   help() {
     terminal.print("@TODO help!");
   },
@@ -49,14 +51,18 @@ module.exports = {
 
       // Output effects
       // @TODO define some constant stage names for garden items
-      let debug_stageName = gardenItem.stage;
-      terminal.print(`Harvested '${gardenItem.getName()}' which was in stage '${debug_stageName}'`);
+      let debug_stageName = 'stage ' + gardenItem.stage;
+      terminal.print(`Harvested '${gardenItem.getName()}' (${debug_stageName})`);
+      terminal.print(`Got:`);
       if (seedInventoryItem) {
-        terminal.print(`Got ${harvestPayload.numSeeds}x ${seedInventoryItem.getName()}`);
+        terminal.print(`\t${harvestPayload.numSeeds}x ${seedInventoryItem.getName()}`);
       }
       if (flowerInventoryItem) {
-        terminal.print(`Got ${harvestPayload.numFlowers}x ${flowerInventoryItem.getName()}`);
+        terminal.print(`\t${harvestPayload.numFlowers}x ${flowerInventoryItem.getName()}`);
       }
+
+      // Announce any newly identified plants
+      announceNewlyDiscoveredPlants("\nYou've identified new plants!", [gardenItem.getPlantId()]);
     }
   },
 };
