@@ -18,8 +18,23 @@ module.exports = {
     gardenItems.forEach((gardenItem, index) => {
       let slotName;
       let slotSummary;
+      let timeRemaining = '';
       if (gardenItem !== undefined) {
+        // Slot name
         slotName = gardenItem.getName();
+
+        // Time remaining
+        const secondsUntilNextMaturity = gardenItem.secondsUntilNextMaturity();
+        timeRemaining = ' - Next growth: ';
+        if (secondsUntilNextMaturity > 3600) {
+          timeRemaining += `${Math.floor(secondsUntilNextMaturity / 3600)}h `;
+        }
+        if (secondsUntilNextMaturity > 60) {
+          timeRemaining += `${Math.floor((secondsUntilNextMaturity % 3600) / 60)}m `;
+        }
+        timeRemaining += `${Math.floor(secondsUntilNextMaturity % 60)}s`;
+
+        // Slot summary
         if (!gardenItem.hasGoneToSeed()) {
           slotSummary = gardenItem.getStageSummary();
         } else {
@@ -30,7 +45,7 @@ module.exports = {
         slotSummary = ' -- ';
       }
 
-      terminal.print(`[${index}] ${slotName}`);
+      terminal.print(`[${index}] ${slotName}${timeRemaining}`);
       terminal.print(`\t${slotSummary}`);
 
     });

@@ -15,8 +15,8 @@ The game is a CLI installable through npm. The input is through prompts like a t
  * ✅ ~~Discover a plant once it reaches maturity~~
  * ✅ ~~Harvest / Collect seeds from garden~~
  * ✅ ~~Harvest / Collect flowers from garden~~
- * Time until next growing phase in Garden summary
- * === MVP LINE 🏆 ===
+ * ✅ ~~Time until next growing phase in Garden summary~~
+ * ✅ ~~=== MVP LINE 🏆 ===~~
  * Inspect plant in garden
  * Harvest all command
  * View orders

@@ -48,7 +48,7 @@ class GardenItem {
    */
   updateMaturityStage() {
     const originalStage = this.stage;
-    let secondsSinceLastMaturity = (new Date() - this.lastMaturityTime) / 1000;
+    let secondsSinceLastMaturity = this._secondsSinceLastMaturity();
     let stagesToMature = Math.floor(secondsSinceLastMaturity / constants.GARDEN_PLANT_STAGE_DURATION_SECONDS);
 
     for (let i = 0; i < stagesToMature; i++) {
@@ -99,6 +99,24 @@ class GardenItem {
       /** @type {PlantInfo} */
       plantInfo: this.plant,
     };
+  }
+
+  /**
+   * @private
+   * Number of seconds since this item last matured
+   * @returns {number}
+   */
+  _secondsSinceLastMaturity() {
+    return (new Date() - this.lastMaturityTime) / 1000;
+  }
+
+  /**
+   * Number of seconds until this place matures again
+   * @returns {number}
+   */
+  secondsUntilNextMaturity() {
+    let secondsSinceLastMaturity = this._secondsSinceLastMaturity();
+    return constants.GARDEN_PLANT_STAGE_DURATION_SECONDS - secondsSinceLastMaturity;
   }
 
   /**
