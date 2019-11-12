@@ -9,20 +9,54 @@ const announceNewlyDiscoveredPlants = require('../util/announceNewlyDiscoveredSe
 
 module.exports = {
   aliases: ['harvest'],
-  description: "Harvest a plant from the garden",
-  usage: ['harvest [garden index]'],
+  description: "Harvest plants from the garden",
+  usage: ['harvest [garden index]', 'harvest all'],
   help() {
     terminal.print("Harvest a plant growing in the garden. The items you receive will depend on how mature the plant is.");
     terminal.print("While a plant is mature i.e. flowering, you will receive seeds and flowers.");
     terminal.print("If a plant has gone to seed, you will receive more seeds, but no flowers.");
     terminal.print("If you harvest a plant before it is mature, you will only get a seed or two.");
     terminal.print(`E.g. ${terminal.style.help.alias('harvest 2')} - harvest the plant growing in slot 2 in the garden.`);
+    terminal.print(`You may also specify ${terminal.style.help.alias('harvest all')} to harvest EVERYTHING in the garden. Be sure you want to do this!`);
+
   },
   func([gardenIndex]) {
     // Ensure garden plants are up to date
     garden.updatePlantMaturities();
 
-    if (gardenIndex === undefined) {
+    if (gardenIndex.toLocaleLowerCase() === 'all') {
+      // User specified "all" - harvest everything
+      let allHarvestedItems = [];
+      terminal.print("Harvested:");
+      garden.getAllPlants().forEach((gardenItem) => {
+        let harvestedItems = harvestGardenItem(gardenItem);
+        allHarvestedItems.push(...harvestedItems);
+
+        // @TODO define some constant stage names for garden items
+        let debug_stageName = 'stage ' + gardenItem.stage;
+        terminal.print(`\t${gardenItem.getName()} (${debug_stageName})`);
+      });
+
+      // Combine common harvestedItems (sorry about the gnarly `reduce()`)
+      let resultItemsGrouped = allHarvestedItems.reduce((currObj, nextItem) => {
+        let itemKey = nextItem.inventoryItem.getName();
+        if (itemKey in currObj) {
+          currObj[itemKey].amount += nextItem.amount;
+        } else {
+          currObj[itemKey] = nextItem;
+          // Also add same reference to an array
+          currObj.collection.push(nextItem);
+        }
+        return currObj;
+      }, { collection: [] }).collection;
+
+      // Output result
+      terminal.print(`Got:`);
+      resultItemsGrouped.forEach((harvestedItem) => {
+        terminal.print(`\t${harvestedItem.amount}x ${harvestedItem.inventoryItem.getName()}`);
+      })
+
+    } else if (gardenIndex === undefined) {
       // `gardenIndex` index is not provided
       terminal.error(`Cannot harvest. Missing garden slot index. See usage: ${terminal.style.help.usage('help harvest')}`);
     } else if (!isNumeric(gardenIndex)) {
@@ -37,35 +71,51 @@ module.exports = {
       // Garden index is a valid number now
       let gardenItem = garden.getPlantInSlotIndex(Number(gardenIndex));
 
-      // Generate payload from garden item
-      let harvestPayload = gardenItem.generateHarvestPayload();
-      // Add X and Y numbers of each seeds and flowers, governed by the harvest payload
-      let seedInventoryItem;
-      let flowerInventoryItem;
-      for (let i = 0; i < harvestPayload.numSeeds; i++) {
-        seedInventoryItem = inventory.add(harvestPayload.plantInfo, SeedItem);
-      }
-      for (let i = 0; i < harvestPayload.numFlowers; i++) {
-        flowerInventoryItem = inventory.add(harvestPayload.plantInfo, FlowerItem);
-      }
+      // Harvest item from garden
+      let harvestedItems = harvestGardenItem(gardenItem);
 
-      // Remove the garden item from the garden
-      garden.removeGardenItem(gardenItem);
-
-      // Output effects
+      // Output result
       // @TODO define some constant stage names for garden items
       let debug_stageName = 'stage ' + gardenItem.stage;
-      terminal.print(`Harvested '${gardenItem.getName()}' (${debug_stageName})`);
+      terminal.print(`Harvested: ${gardenItem.getName()} (${debug_stageName})`);
       terminal.print(`Got:`);
-      if (seedInventoryItem) {
-        terminal.print(`\t${harvestPayload.numSeeds}x ${seedInventoryItem.getName()}`);
-      }
-      if (flowerInventoryItem) {
-        terminal.print(`\t${harvestPayload.numFlowers}x ${flowerInventoryItem.getName()}`);
-      }
+      harvestedItems.forEach((harvestedItem) => {
+        terminal.print(`\t${harvestedItem.amount}x ${harvestedItem.inventoryItem.getName()}`);
+      })
 
       // Announce any newly identified plants
       announceNewlyDiscoveredPlants("\nYou've identified new plants!", [gardenItem.getPlantId()]);
     }
   },
 };
+
+function harvestGardenItem(gardenItem) {
+  // Generate payload from garden item
+  let harvestPayload = gardenItem.generateHarvestPayload();
+  // Add X and Y numbers of each seeds and flowers, governed by the harvest payload
+  let harvestedItems = [];
+  for (let i = 0; i < harvestPayload.numSeeds; i++) {
+    let newItem = inventory.add(harvestPayload.plantInfo, SeedItem);
+
+    if (i === 0) {
+      harvestedItems.push({
+        inventoryItem: newItem,
+        amount: harvestPayload.numSeeds,
+      });
+    }
+  }
+  for (let i = 0; i < harvestPayload.numFlowers; i++) {
+    let newItem = inventory.add(harvestPayload.plantInfo, FlowerItem);
+    if (i === 0) {
+      harvestedItems.push({
+        inventoryItem: newItem,
+        amount: harvestPayload.numFlowers,
+      });
+    }
+  }
+
+  // Remove the garden item from the garden
+  garden.removeGardenItem(gardenItem);
+
+  return harvestedItems;
+}

@@ -17,9 +17,10 @@ The game is a CLI installable through npm. The input is through prompts like a t
  * ✅ ~~Harvest / Collect flowers from garden~~
  * ✅ ~~Time until next growing phase in Garden summary~~
  * ✅ ~~Toggle light/dark theme~~
- * ✅ ~~=== MVP LINE 🏆 ===~~
+ * ✅ ~~Harvest all command~~
+ * Growth stage names
+ * === MVP LINE 🏆 ===
  * Inspect plant in garden
- * Harvest all command
  * View orders
  * Receive new orders every X minutes
  * Fulfil order from inventory
@@ -35,8 +36,6 @@ The game is a CLI installable through npm. The input is through prompts like a t
  * ✅ ~~Text colouring and styles~~
  * Add more plants
  * ✅ ~~"Gone to seed" message~~
- * "Harvest all" command
- * Straighten out column sizes
  * === MVP LINE 🏆 ===
  * Growth stage time durations
  * autocomplete more than just the command alias
