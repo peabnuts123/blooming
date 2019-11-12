@@ -10,10 +10,10 @@ const inventoryCommand = require('./inventory');
 const gardenCommand = require('./garden');
 const plantCommand = require('./plant');
 const harvestCommand = require('./harvest');
+const themeCommand = require('./theme');
 
 /**
  * All commands available from the CLI
- * @TODO should some of these be conditional? i.e. only available in certain situations?
  */
 const commands = [
   // Help command has intentional circular dependencies so must be define in-line
@@ -62,6 +62,7 @@ const commands = [
   gardenCommand,
   plantCommand,
   harvestCommand,
+  themeCommand,
 ];
 
 /**

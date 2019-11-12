@@ -1,12 +1,11 @@
-const readline = require('readline');
 const stringLength = require('string-length').default;
 
-const { getCommandByAlias, autoCompleteFunction } = require('./commands');
 const constants = require('./constants');
 const { getRandomSeed } = require('./data-types/seeds');
 const garden = require('./garden/garden');
 const inventory = require('./inventory/inventory');
 const SeedItem = require('./inventory/seed-item');
+const prompt = require('./prompt');
 const { state, saveState } = require('./state');
 const terminal = require('./terminal');
 const findMax = require('./util/findMax');
@@ -92,29 +91,6 @@ function giveLoginReward() {
 // Announce plants that discovered while player was away
 announceNewlyDiscoveredPlants("You've identified new plants since you visited!");
 
-// PROMPTING
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  completer: autoCompleteFunction,
-  prompt: terminal.style.prompt('bloom>') + ' ',
-});
+// Begin prompt
+prompt.begin();
 
-rl.prompt();
-
-rl.on('line', (userInput) => {
-  let [command, ...args] = userInput.trim().split(/\s+/g);
-
-  // Lookup command by alias
-  let commandDefinition = getCommandByAlias(command);
-  if (commandDefinition) {
-    // Execute command if it was found
-    commandDefinition.func(args);
-  } else {
-    terminal.print(terminal.style.error("Command not recognised"));
-  }
-
-  // Log newline after every command
-  terminal.print();
-  rl.prompt();
-});

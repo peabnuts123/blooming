@@ -2,7 +2,6 @@ const path = require('path');
 const fs = require('fs');
 
 const packageJson = require('../package.json');
-const terminal = require('./terminal');
 
 
 const DATA_FILE_NAME = 'state.json';
@@ -24,7 +23,7 @@ if (dataFileExists) {
     // Attempt to parse file contents as JSON
     state = JSON.parse(stateFileContents);
   } catch (e) {
-    terminal.print(`Error! Could not load application state (not valid JSON). Please check the file is not corrupted: ${dataFileFullPath}`);
+    throw new Error(`Could not load application state (not valid JSON). Please check the file is not corrupted: ${dataFileFullPath}`);
   }
 } else {
   // State file does not exist, make a new one
@@ -67,6 +66,10 @@ function createNewState() {
       seedIds: [],
       /** List of IDs of plants that have been discovered but have not yet been announced (subset of `seedIds`) */
       newlyDiscoveredIds: [],
+    },
+    terminal: {
+      /** Current display theme e.g. light/dark */
+      theme: 0,
     },
     /** Time of last login */
     lastLoginTime: undefined,
