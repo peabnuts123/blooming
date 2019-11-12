@@ -40,7 +40,7 @@ module.exports = {
         if (!gardenItem.hasGoneToSeed()) {
           slotSummary = gardenItem.getStageSummary();
         } else {
-          slotSummary = `@TODO gone to seed`;
+          slotSummary = `Gone to seed.`;
         }
       } else {
         slotName = terminal.style.garden.emptySlot('[ Empty slot ]');
