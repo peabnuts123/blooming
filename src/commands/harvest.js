@@ -9,10 +9,14 @@ const announceNewlyDiscoveredPlants = require('../util/announceNewlyDiscoveredSe
 
 module.exports = {
   aliases: ['harvest'],
-  description: "Harvest a plant from the garden in its current state",
+  description: "Harvest a plant from the garden",
   usage: ['harvest [garden index]'],
   help() {
-    terminal.print("@TODO help!");
+    terminal.print("Harvest a plant growing in the garden. The items you receive will depend on how mature the plant is.");
+    terminal.print("While a plant is mature i.e. flowering, you will receive seeds and flowers.");
+    terminal.print("If a plant has gone to seed, you will receive more seeds, but no flowers.");
+    terminal.print("If you harvest a plant before it is mature, you will only get a seed or two.");
+    terminal.print(`E.g. ${terminal.style.help.alias('harvest 2')} - harvest the plant growing in slot 2 in the garden.`);
   },
   func([gardenIndex]) {
     // Ensure garden plants are up to date
@@ -20,15 +24,15 @@ module.exports = {
 
     if (gardenIndex === undefined) {
       // `gardenIndex` index is not provided
-      terminal.print('Cannot harvest. Missing garden slot index. See usage: help harvest')
+      terminal.error(`Cannot harvest. Missing garden slot index. See usage: ${terminal.style.help.usage('help harvest')}`);
     } else if (!isNumeric(gardenIndex)) {
       // Garden index is not a number
-      terminal.print('Cannot harvest. Garden slot index is not valid - it must be a number');
+      terminal.error('Cannot harvest. Garden slot index is not valid - it must be a number');
     } else if (Number(gardenIndex) < 0 || Number(gardenIndex) >= garden.getSize()) {
       // Garden index is not in the right bounds
-      terminal.print(`Cannot harvest. Garden slot index is not valid - it must be between 0 and ${garden.getSize() - 1}`);
+      terminal.error(`Cannot harvest. Garden slot index is not valid - it must be between 0 and ${garden.getSize() - 1}`);
     } else if (garden.isSlotEmpty(Number(gardenIndex))) {
-      terminal.print(`Cannot harvest. Garden slot ${gardenIndex} is empty`);
+      terminal.error(`Cannot harvest. Garden slot ${gardenIndex} is empty`);
     } else {
       // Garden index is a valid number now
       let gardenItem = garden.getPlantInSlotIndex(Number(gardenIndex));

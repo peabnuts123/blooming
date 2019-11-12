@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/peabnuts123/blooming#readme",
   "dependencies": {
-    "chalk": "^2.4.2"
+    "chalk": "^2.4.2",
+    "string-length": "^3.1.0"
   },
   "devDependencies": {
     "eslint": "^6.6.0"

@@ -8,7 +8,7 @@ module.exports = {
     terminal.print("Exits the application.");
   },
   func() {
-    terminal.print("See you later!");
+    terminal.print(terminal.style.message("See ya later!"));
     process.exit(0);
   },
 };

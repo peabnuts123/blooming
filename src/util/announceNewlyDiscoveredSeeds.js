@@ -15,7 +15,7 @@ function announceNewlyDiscoveredPlants(message, idFilter) {
   if (plantInfos.length > 0) {
     // Print message if one is supplied
     if (message) {
-      terminal.print(message);
+      terminal.print(terminal.style.message(message));
     }
 
     // Print summary of discovered plants

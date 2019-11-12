@@ -1,3 +1,5 @@
+const stringLength = require('string-length').default;
+
 const terminal = require('../terminal');
 const padString = require('../util/padString');
 const findMax = require('../util/findMax');
@@ -21,9 +23,9 @@ const commands = [
     usage: ['help', 'help [command]'],
     help() {
       terminal.print("Show information about all available commands or show more information about a particular command.");
-      terminal.print("Type `help` by itself for a list of commands.")
-      terminal.print("Type `help [command]` for information about a specific command.")
-      terminal.print("E.g. `help inventory`");
+      terminal.print(`Type ${terminal.style.command('help')} by itself for a list of commands.`)
+      terminal.print(`Type ${terminal.style.help.usage('help [command]')} for information about a specific command.`)
+      terminal.print(`E.g. ${terminal.style.help.usage('help inventory')}`);
     },
     func([commandAlias]) {
       if (commandAlias) {
@@ -31,12 +33,13 @@ const commands = [
         let commandDefinition = getCommandByAlias(commandAlias);
         if (commandDefinition) {
           // Print usage and execute help function (which is assumed to print some more help)
-          terminal.print(`Aliases: ${commandDefinition.aliases.join(', ')}`);
-          terminal.print(`Usage: ${commandDefinition.usage.join(', ')}`);
+          terminal.print(`Aliases: ${commandDefinition.aliases.map(terminal.style.help.alias).join(', ')}`);
+          terminal.print(`Usage: ${commandDefinition.usage.map(terminal.style.help.usage).join(', ')}`);
+          terminal.print();
           commandDefinition.help();
         } else {
           // Passed-in command alias not found
-          terminal.print(`Can't find a command called '${commandAlias}'`);
+          terminal.error(`Can't find a command called '${commandAlias}'`);
         }
       } else {
         // Print help for all commands
@@ -44,9 +47,9 @@ const commands = [
           return commandA.usage.join(', ').localeCompare(commandB.usage.join(', '));
         });
         terminal.print("Commands:")
-        let leftColumnWidth = findMax(sortedCommands, (commandDefinition) => commandDefinition.usage.join(', ').length) + 10;
+        let leftColumnWidth = findMax(sortedCommands, (commandDefinition) => stringLength(commandDefinition.usage.join(', '))) + 5;
         sortedCommands.forEach((commandDefinition) => {
-          let str = "    " + commandDefinition.usage.join(', ');
+          let str = '\t' + commandDefinition.usage.map(terminal.style.help.usage).join(', ');
           str = padString(str, leftColumnWidth);
           str += commandDefinition.description;
           terminal.print(str);

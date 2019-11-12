@@ -7,7 +7,7 @@ module.exports = {
   description: "View what's currently growing in the garden",
   usage: ['garden'],
   help() {
-    terminal.print("@TODO help!");
+    terminal.print("Show a summary of the garden: what things are growing, and how mature they are.");
   },
   func() {
     // Ensure garden plants are up to date
@@ -24,15 +24,17 @@ module.exports = {
         slotName = gardenItem.getName();
 
         // Time remaining
-        const secondsUntilNextMaturity = gardenItem.secondsUntilNextMaturity();
-        timeRemaining = ' - Next growth: ';
-        if (secondsUntilNextMaturity > 3600) {
-          timeRemaining += `${Math.floor(secondsUntilNextMaturity / 3600)}h `;
+        if (!gardenItem.hasGoneToSeed()) {
+          const secondsUntilNextMaturity = gardenItem.secondsUntilNextMaturity();
+          timeRemaining = ' - Next growth: ';
+          if (secondsUntilNextMaturity > 3600) {
+            timeRemaining += `${Math.floor(secondsUntilNextMaturity / 3600)}h `;
+          }
+          if (secondsUntilNextMaturity > 60) {
+            timeRemaining += `${Math.floor((secondsUntilNextMaturity % 3600) / 60)}m `;
+          }
+          timeRemaining += `${Math.floor(secondsUntilNextMaturity % 60)}s`;
         }
-        if (secondsUntilNextMaturity > 60) {
-          timeRemaining += `${Math.floor((secondsUntilNextMaturity % 3600) / 60)}m `;
-        }
-        timeRemaining += `${Math.floor(secondsUntilNextMaturity % 60)}s`;
 
         // Slot summary
         if (!gardenItem.hasGoneToSeed()) {
@@ -41,13 +43,12 @@ module.exports = {
           slotSummary = `@TODO gone to seed`;
         }
       } else {
-        slotName = '[ Empty slot ]';
-        slotSummary = ' -- ';
+        slotName = terminal.style.garden.emptySlot('[ Empty slot ]');
+        slotSummary = terminal.style.garden.emptySlot(' -- ');
       }
 
-      terminal.print(`[${index}] ${slotName}${timeRemaining}`);
+      terminal.print(`[${terminal.style.command(index)}] ${slotName}${terminal.style.garden.timeRemaining(timeRemaining)}`);
       terminal.print(`\t${slotSummary}`);
-
     });
 
     // Announce any newly identified plants

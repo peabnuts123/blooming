@@ -1,5 +1,6 @@
 const discovery = require('../discovery');
 const constants = require('../constants');
+const terminal = require('../terminal');
 
 /**
  * A seed that is in your inventory. It can be planted in the garden
@@ -19,9 +20,9 @@ class PlantInfo {
 
   getSeedName() {
     if (this.isDiscovered()) {
-      return this._definition.seed.name;
+      return terminal.style.inventory.seedItem(this._definition.seed.name);
     } else {
-      return `Unidentified seed`
+      return terminal.style.inventory.unidentifiedItem(`Unidentified seed`);
     }
   }
 
@@ -31,9 +32,9 @@ class PlantInfo {
 
   getPlantName() {
     if (this.isDiscovered()) {
-      return this._definition.plant.name;
+      return terminal.style.garden.plantName(this._definition.plant.name);
     } else {
-      return `Unidentified plant`
+      return terminal.style.garden.unidentifiedPlant(`Unidentified plant`);
     }
   }
 
@@ -46,7 +47,7 @@ class PlantInfo {
    * @returns {string}
    */
   getFlowerName() {
-    return this._definition.flower.name;
+    return terminal.style.inventory.flowerItem(this._definition.flower.name);
   }
 
   /**
