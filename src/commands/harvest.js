@@ -25,7 +25,7 @@ module.exports = {
     // Ensure garden plants are up to date
     garden.updatePlantMaturities();
 
-    if (gardenIndex.toLocaleLowerCase() === 'all') {
+    if (gardenIndex && gardenIndex.toLocaleLowerCase() === 'all') {
       // User specified "all" - harvest everything
       let allHarvestedItems = [];
       terminal.print("Harvested:");
