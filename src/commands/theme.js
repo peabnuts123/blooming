@@ -13,6 +13,6 @@ module.exports = {
     global.reloadPrompt();
     terminal.clear();
     terminal.print("(Cleared terminal)");
-    terminal.print(terminal.style.message(`Switched terminal theme '${terminal.style.name}'.`));
+    terminal.print(terminal.style.message(`Switched to terminal theme '${terminal.style.name}'.`));
   },
 };
