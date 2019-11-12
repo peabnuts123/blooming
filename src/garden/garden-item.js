@@ -60,7 +60,7 @@ class GardenItem {
       this.stage++;
       // If plant has reached maturity, mark as discovered
       if (this.stage == constants.PLANT_MATURITY_STAGE && !this.plant.isDiscovered()) {
-        discovery.markSeedAsDiscovered(this.plant.getId());
+        discovery.markPlantAsDiscovered(this.plant.getId());
       }
     }
     let didMature = this.stage > originalStage;

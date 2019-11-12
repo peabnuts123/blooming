@@ -4,6 +4,7 @@ const constants = {
   SEED_REWARD_MIN_INTERVAL_SECONDS: 30,
 
   /** The duration of each growth stage for plants in the garden */
+  // GARDEN_PLANT_STAGE_DURATION_SECONDS: 1200,
   GARDEN_PLANT_STAGE_DURATION_SECONDS: 10,
 
   /**

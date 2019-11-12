@@ -7,6 +7,10 @@ const { state, saveState } = require('./state');
  */
 class Terminal {
   constructor() {
+    /**
+     * Theme definitions for common styles.
+     * They are defined here instead of a const because they need to reference `this.style`
+     */
     this._themes = {
       dark: {
         name: 'Dark',
@@ -65,18 +69,33 @@ class Terminal {
     this._deserialise(state.terminal);
   }
 
+  /**
+   * Print a series of messages to the terminal
+   * @param {string[]} messages Messages to print
+   */
   print(...messages) {
     console.log(...messages);
   }
 
+  /**
+   * Print a series of error messages to the terminal
+   * @param {string[]} messages Errors to print
+   */
   error(...messages) {
     console.log(`${this.style.error(messages.join(' '))}`);
   }
 
+  /**
+   * Clear the terminal screen
+   */
   clear() {
     console.clear();
   }
 
+  /**
+   * Toggle the current theme between Dark and Light
+   * This function will be removed if any more than 2 themes are ever added in the future.
+   */
   toggleTheme() {
     if (this._theme === 0) {
       this._setTheme(1);
@@ -87,6 +106,11 @@ class Terminal {
     this._saveState();
   }
 
+  /**
+   * @private
+   * Set the current terminal corresponding to the `themeIndex` parameter
+   * @param {number} themeIndex Corresponding index to set the theme to
+   */
   _setTheme(themeIndex) {
     switch (themeIndex) {
       case 0:
@@ -102,15 +126,29 @@ class Terminal {
     this._theme = themeIndex;
   }
 
+  /**
+   * @private
+   * Deserialise the terminal state from disk (JSON)
+   * @param {object} discoveryState Raw discovery state object from disk
+   */
   _deserialise(terminalState) {
     this._setTheme(terminalState.theme);
   }
 
+  /**
+   * @private
+   * Save the current terminal state to disk
+   */
   _saveState() {
     state.terminal = this._serialise();
     saveState();
   }
 
+  /**
+   * @private
+   * Convert the current terminal state into a JSON object for storing on disk
+   * @returns {object}
+   */
   _serialise() {
     return {
       theme: this._theme,

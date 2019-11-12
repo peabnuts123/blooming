@@ -1,7 +1,7 @@
 const PlantInfo = require('./plant-info');
 
 /**
- * Base seed object. All seed objects will inherit these values by default
+ * Base plant definition object. All plant definitions will inherit these values by default
  */
 const base = {
   /** Unique identifier for plant */
@@ -54,9 +54,9 @@ const base = {
 };
 
 /**
- * Raw data for seeds
+ * Raw plant definition
  */
-const seeds = [
+const rawPlantDefinitions = [
   // ------------------
   // POPPY
   // ------------------
@@ -114,23 +114,23 @@ const seeds = [
 
 
 // Compile seeds into classes for computation
-const ALL_SEEDS = seeds.map((seedDefinition) => {
+const ALL_PLANT_INFOS = rawPlantDefinitions.map((plantDefinition) => {
   // Combine seed definition with base
-  let compiledDefinition = Object.assign({}, base, seedDefinition, {
+  let compiledDefinition = Object.assign({}, base, plantDefinition, {
     // Combine nested properties with base property
-    seed: Object.assign({}, base.seed, seedDefinition.seed),
-    plant: Object.assign({}, base.plant, seedDefinition.plant),
-    flower: Object.assign({}, base.flower, seedDefinition.flower),
+    seed: Object.assign({}, base.seed, plantDefinition.seed),
+    plant: Object.assign({}, base.plant, plantDefinition.plant),
+    flower: Object.assign({}, base.flower, plantDefinition.flower),
     harvest: Object.assign({}, base.harvest),
-    stageDescriptions: Object.assign({}, base.stageDescriptions, seedDefinition.stageDescriptions),
+    stageDescriptions: Object.assign({}, base.stageDescriptions, plantDefinition.stageDescriptions),
   });
 
   // Merge harvest definitions if supplied
-  if (seedDefinition.harvest) {
+  if (plantDefinition.harvest) {
     // Merge each option individually
-    compiledDefinition.harvest.plant = Object.assign({}, compiledDefinition.harvest.plant, seedDefinition.harvest.plant);
-    compiledDefinition.harvest.flower = Object.assign({}, compiledDefinition.harvest.flower, seedDefinition.harvest.flower);
-    compiledDefinition.harvest.seed = Object.assign({}, compiledDefinition.harvest.seed, seedDefinition.harvest.seed);
+    compiledDefinition.harvest.plant = Object.assign({}, compiledDefinition.harvest.plant, plantDefinition.harvest.plant);
+    compiledDefinition.harvest.flower = Object.assign({}, compiledDefinition.harvest.flower, plantDefinition.harvest.flower);
+    compiledDefinition.harvest.seed = Object.assign({}, compiledDefinition.harvest.seed, plantDefinition.harvest.seed);
   }
 
   // Construct class object from compiled blueprint
@@ -138,19 +138,21 @@ const ALL_SEEDS = seeds.map((seedDefinition) => {
 });
 
 /**
- * Look up a seed data item by ID
- * @param {string} id ID of seed data item
+ * Look up a plant info item by ID
+ * @param {string} id ID of plant info item
  */
 function getPlantInfoById(id) {
-  return ALL_SEEDS.find((seedItem) => seedItem.getId() === id);
+  return ALL_PLANT_INFOS.find((plantInfo) => plantInfo.getId() === id);
 }
 
-function getRandomSeed() {
-  return ALL_SEEDS[Math.floor(Math.random() * ALL_SEEDS.length)];
+/**
+ * Get a random plant from the collection of all plant definitions
+ */
+function getRandomPlantInfo() {
+  return ALL_PLANT_INFOS[Math.floor(Math.random() * ALL_PLANT_INFOS.length)];
 }
 
 module.exports = {
-  ALL_SEEDS,
   getPlantInfoById,
-  getRandomSeed,
+  getRandomPlantInfo,
 };

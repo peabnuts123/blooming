@@ -3,21 +3,34 @@ const constants = require('../constants');
 const terminal = require('../terminal');
 
 /**
- * A seed that is in your inventory. It can be planted in the garden
+ * An object containing all the information about a plant in all of its forms.
  */
 class PlantInfo {
   constructor(definition) {
     this._definition = definition;
   }
 
+  /**
+   * Whether this plant has been discovered yet
+   * @returns {boolean}
+   */
   isDiscovered() {
-    return discovery.isSeedDiscovered(this.getId());
+    return discovery.isPlantDiscovered(this.getId());
   }
 
+  /**
+   * Get the unique identifier for this plant
+   * @returns {string}
+   */
   getId() {
     return this._definition.id;
   }
 
+  /**
+   * Get the display name of this plant as a seed.
+   * If it hasn't been discovered yet, it will just have a generic, "unidentified" name
+   * @returns {string}
+   */
   getSeedName() {
     if (this.isDiscovered()) {
       return terminal.style.inventory.seedItem(this._definition.seed.name);
@@ -26,10 +39,19 @@ class PlantInfo {
     }
   }
 
+  /**
+   * Get the display summary of this plant as a seed.
+   * @returns {string}
+   */
   getSeedSummary() {
     return this._definition.seed.summary;
   }
 
+  /**
+   * Get the display name of this plant as a in the garden.
+   * If it hasn't been discovered yet, it will just have a generic, "unidentified" name
+   * @returns {string}
+   */
   getPlantName() {
     if (this.isDiscovered()) {
       return terminal.style.garden.plantName(this._definition.plant.name);
@@ -38,6 +60,11 @@ class PlantInfo {
     }
   }
 
+  /**
+   * Get the description of how this plant is growing for a specific stage.
+   * @param {number} stageIndex The stage for which to get a description
+   * @returns {string}
+   */
   getStageDescription(stageIndex) {
     return this._definition.stageDescriptions['stage' + stageIndex];
   }
@@ -58,6 +85,11 @@ class PlantInfo {
     return this._definition.flower.summary;
   }
 
+  /**
+   * Get the harvest resource drop ranges for this plant at a given stage.
+   * @param {number} stageIndex The stage for which to get harvest resource drop ranges
+   * @returns {object} An object containing ranges e.g. "seedMin", "seedMax", "flowerMin" and "flowerMax"
+   */
   getStageHarvestRanges(stageIndex) {
     if (stageIndex >= constants.PLANT_SEED_STAGE) {
       return this._definition.harvest.seed;

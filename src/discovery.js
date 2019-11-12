@@ -1,17 +1,36 @@
 const { state, saveState } = require('./state');
 
+/**
+ * Object that tracks what things have been discovered/identified by the player
+ */
 class Discovery {
   constructor() {
+    /** @type {string[]} */
+    this._discoveredSeedIds = [];
+    /** @type {string[]} */
+    this._newlyDiscoveredIds = [];
+
     this._deserialise(state.discovery);
   }
 
-  isSeedDiscovered(plantId) {
+  /**
+   * Whether a plant has been discovered yet
+   * @param {string} plantId Unique plant identifier
+   * @returns {boolean}
+   */
+  isPlantDiscovered(plantId) {
     return this._discoveredSeedIds.includes(plantId);
   }
 
-  markSeedAsDiscovered(plantId) {
+  /**
+   * Mark a plant as discovered.
+   * Discovered plants are queued up in a separate "Newly discovered" category
+   * until cleared out by `getNewlyDiscoveredPlantIds()`
+   * @param {string} plantId Unique plant identifier
+   */
+  markPlantAsDiscovered(plantId) {
     // Ensure we never add a double-up
-    if (!this.isSeedDiscovered(plantId)) {
+    if (!this.isPlantDiscovered(plantId)) {
       this._discoveredSeedIds.push(plantId);
 
       // Add to backlog of newly discovered seeds
@@ -45,16 +64,30 @@ class Discovery {
   }
 
 
+  /**
+   * @private
+   * Deserialise the discovery state from disk (JSON)
+   * @param {object} discoveryState Raw discovery state object from disk
+   */
   _deserialise(discoveryState) {
     this._discoveredSeedIds = discoveryState.seedIds;
     this._newlyDiscoveredIds = discoveryState.newlyDiscoveredIds;
   }
 
+  /**
+   * @private
+   * Save the current discovery state to disk
+   */
   _saveState() {
     state.discovery = this._serialise();
     saveState();
   }
 
+  /**
+   * @private
+   * Convert the current discovery state into a JSON object for storing on disk
+   * @returns {object}
+   */
   _serialise() {
     return {
       seedIds: this._discoveredSeedIds,

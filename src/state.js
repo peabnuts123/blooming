@@ -3,7 +3,9 @@ const fs = require('fs');
 
 const packageJson = require('../package.json');
 
-
+/**
+ * Name to store the state data in
+ */
 const DATA_FILE_NAME = 'state.json';
 
 // Get root folder for this application's data

@@ -55,12 +55,11 @@ The game is a CLI installable through npm. The input is through prompts like a t
  * Change items in the store every X minutes
 
 ## Technical backlog
- * Document and tidy up files
-      * discovery
-      * plant-info
+ * ✅ ~~Document and tidy up files~~
  * ✅ ~~Text colouring and styles~~
  * Add more plants
  * ✅ ~~"Gone to seed" message~~
+ * Change growing timer back to an hour or so
  * === MVP LINE 🏆 ===
  * Growth stage time durations
  * autocomplete more than just the command alias

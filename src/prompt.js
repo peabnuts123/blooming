@@ -3,6 +3,9 @@ const { getCommandByAlias, autoCompleteFunction } = require('./commands');
 
 const terminal = require('./terminal');
 
+/**
+ * Class to manage prompting the player, the CLI
+ */
 class Prompt {
   constructor() {
     // PROMPTING
@@ -21,6 +24,9 @@ class Prompt {
     this.reloadPrompt();
   }
 
+  /**
+   * Begin prompting the player
+   */
   begin() {
     this._rl.prompt();
 
@@ -42,6 +48,9 @@ class Prompt {
     });
   }
 
+  /**
+   * Reload the prompt text from the current terminal theme
+   */
   reloadPrompt() {
     this._rl.setPrompt(terminal.style.prompt('bloom>') + ' ');
   }

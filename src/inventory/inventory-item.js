@@ -5,6 +5,7 @@
  */
 class InventoryItem {
   constructor() {
+    /** @type {number} */
     this.amount = 0;
   }
 

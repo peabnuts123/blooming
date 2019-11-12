@@ -1,7 +1,7 @@
 const stringLength = require('string-length').default;
 
 const constants = require('./constants');
-const { getRandomSeed } = require('./data-types/seeds');
+const { getRandomPlantInfo } = require('./data-types/seeds');
 const garden = require('./garden/garden');
 const inventory = require('./inventory/inventory');
 const SeedItem = require('./inventory/seed-item');
@@ -17,7 +17,7 @@ const announceNewlyDiscoveredPlants = require('./util/announceNewlyDiscoveredSee
 // Update plants in the garden
 garden.updatePlantMaturities();
 
-// LAST LOGIN
+// LAST LOGIN TIME
 const currentTime = new Date();
 const lastLoginTimeString = state.lastLoginTime;
 state.lastLoginTime = currentTime.toISOString();
@@ -45,6 +45,9 @@ if (lastLoginRewardTimeString) {
   giveLoginReward();
 }
 
+/**
+ * Give the player a login reward of a random amount of random seeds
+ */
 function giveLoginReward() {
   // Save current time as last reward time
   state.lastLoginRewardTime = currentTime.toISOString();
@@ -56,7 +59,7 @@ function giveLoginReward() {
   const numRewardSeeds = min + Math.floor(Math.random() * ((max - min) + 1));
   let rewardSeeds = {};
   for (let i = 0; i < numRewardSeeds; i++) {
-    let newSeed = getRandomSeed();
+    let newSeed = getRandomPlantInfo();
     // Add random seed to inventory
     inventory.add(newSeed, SeedItem);
 
@@ -93,4 +96,3 @@ announceNewlyDiscoveredPlants("You've identified new plants since you visited!")
 
 // Begin prompt
 prompt.begin();
-
