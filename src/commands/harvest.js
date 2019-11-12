@@ -33,7 +33,6 @@ module.exports = {
         let harvestedItems = harvestGardenItem(gardenItem);
         allHarvestedItems.push(...harvestedItems);
 
-        // @TODO define some constant stage names for garden items
         terminal.print(`\t${gardenItem.getName()} (${constants.STAGE_NAME['STAGE' + gardenItem.stage]})`);
       });
 
@@ -75,7 +74,6 @@ module.exports = {
       let harvestedItems = harvestGardenItem(gardenItem);
 
       // Output result
-      // @TODO define some constant stage names for garden items
       terminal.print(`Harvested: ${gardenItem.getName()} (${constants.STAGE_NAME['STAGE' + gardenItem.stage]})`);
       terminal.print(`Got:`);
       harvestedItems.forEach((harvestedItem) => {
