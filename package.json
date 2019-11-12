@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "bin": {
-    "bloom": "src/index.js"
+    "bloom": "src/cli.js"
   },
   "scripts": {
     "start": "node src/index.js"
