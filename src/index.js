@@ -83,7 +83,7 @@ function giveLoginReward() {
 
   let leftColumnWidth = findMax(rewardSeeds, (rewardSeedEntry) => stringLength(rewardSeedEntry.seed.getSeedName())) + 10;
   rewardSeeds.forEach((rewardSeedEntry) => {
-    terminal.print(`    ${padString(terminal.style.inventory.seedItem(rewardSeedEntry.seed.getSeedName()), leftColumnWidth)}x${rewardSeedEntry.amount}`);
+    terminal.print(`\t${padString(terminal.style.inventory.seedItem(rewardSeedEntry.seed.getSeedName()), leftColumnWidth)}x${rewardSeedEntry.amount}`);
   });
   terminal.print();
 }
