@@ -28,7 +28,6 @@ if (dataFileExists) {
 } else {
   // State file does not exist, make a new one
   state = createNewState();
-  // console.log('[DEBUG] Created NEW state');
   saveState();
 }
 
@@ -84,7 +83,6 @@ function createNewState() {
 function saveState() {
   const stateFileContents = JSON.stringify(state);
   fs.writeFileSync(dataFileFullPath, stateFileContents);
-  // console.log('[DEBUG] Wrote state to disk');
 }
 
 module.exports = {

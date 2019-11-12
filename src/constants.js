@@ -15,6 +15,16 @@ const constants = {
   PLANT_MATURITY_STAGE: 3,
   /** Stage index at which a plant is deemed "gone to seed" */
   PLANT_SEED_STAGE: 4,
+
+  /** Display names for each growth stage */
+  STAGE_NAME: {
+    STAGE0: "Sprout",
+    STAGE1: "Seedling",
+    STAGE2: "Budding",
+    STAGE3: "Flowering",
+    STAGE4: "Withering",
+    STAGE5: "Gone to seed",
+  },
 };
 
 module.exports = constants;

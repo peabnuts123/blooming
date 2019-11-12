@@ -5,6 +5,7 @@ const isNumeric = require('../util/isNumeric');
 const SeedItem = require('../inventory/seed-item');
 const FlowerItem = require('../inventory/flower-item');
 const announceNewlyDiscoveredPlants = require('../util/announceNewlyDiscoveredSeeds');
+const constants = require('../constants');
 
 
 module.exports = {
@@ -33,8 +34,7 @@ module.exports = {
         allHarvestedItems.push(...harvestedItems);
 
         // @TODO define some constant stage names for garden items
-        let debug_stageName = 'stage ' + gardenItem.stage;
-        terminal.print(`\t${gardenItem.getName()} (${debug_stageName})`);
+        terminal.print(`\t${gardenItem.getName()} (${constants.STAGE_NAME['STAGE' + gardenItem.stage]})`);
       });
 
       // Combine common harvestedItems (sorry about the gnarly `reduce()`)
@@ -76,8 +76,7 @@ module.exports = {
 
       // Output result
       // @TODO define some constant stage names for garden items
-      let debug_stageName = 'stage ' + gardenItem.stage;
-      terminal.print(`Harvested: ${gardenItem.getName()} (${debug_stageName})`);
+      terminal.print(`Harvested: ${gardenItem.getName()} (${constants.STAGE_NAME['STAGE' + gardenItem.stage]})`);
       terminal.print(`Got:`);
       harvestedItems.forEach((harvestedItem) => {
         terminal.print(`\t${harvestedItem.amount}x ${harvestedItem.inventoryItem.getName()}`);
